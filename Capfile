@@ -8,7 +8,7 @@ XP5K::Config.load
 @osxp.define_job({
   :resources  => XP5K::Config[:resources] || "{type='kavlan'}/vlan=1+/nodes=1,walltime=4",
   :site       => XP5K::Config[:site] || 'nancy',
-  :types      => ['deploy'],
+  :types      => ['deploy','destructive'],
   :name       => 'OpenStackXp_ctrl',
   :command    => 'sleep 86400'
 })
@@ -23,11 +23,12 @@ XP5K::Config.load
 
 
 @osxp.define_deployment({
-  :site           => XP5K::Config[:site] || 'nancy',
-  :environment    => 'wheezy-x64-br-custom',
-  :jobs           => %w{ OpenStackXp_cmpt OpenStackXp_ctrl },
-  :key            => File.read(XP5K::Config[:public_key]),
-  :vlan           => XP5K::Config[:vlan],
+  :site             => XP5K::Config[:site] || 'nancy',
+  :environment      => 'wheezy-x64-nfs',
+  :jobs             => %w{ OpenStackXp_cmpt OpenStackXp_ctrl },
+  :key              => File.read(XP5K::Config[:public_key]),
+  :vlan             => XP5K::Config[:vlan],
+  :partition_number => '3'
 })
 
 role :ctrl do
