@@ -1,4 +1,5 @@
 require 'xp5k'
+# https://github.com/pmorillon/xp5k
 
 XP5K::Config.load
 
@@ -43,31 +44,37 @@ role :cmpt do
   ctrl
 end
 
-namespace :xp5k do
-  desc 'Submit jobs'
-  task :submit do
-    @osxp.submit
-  end
+desc 'Submit jobs'
+task :submit do
+  @osxp.submit
+end
 
-  desc 'Deploy with Kadeplopy'
-  task :deploy do
-    @osxp.deploy
-  end
+desc 'Deploy with Kadeplopy'
+task :deploy do
+  @osxp.deploy
+end
 
-  desc 'Status'
-  task :status do
-    @osxp.status
-  end
+desc 'Status'
+task :status do
+  @osxp.status
+end
 
-  desc 'Remove all running jobs'
-  task :clean do
-    logger.debug "Clean all Grid'5000 running jobs..."
-    @osxp.clean
-  end
+desc 'Remove all running jobs'
+task :clean do
+  logger.debug "Clean all Grid'5000 running jobs..."
+  @osxp.clean
+end
 
-  desc 'Run date command'
-  task :date, :roles => [:ctrl,:cmpt] do
-    set :user, 'root'
-    run 'date'
-  end
+desc 'Run specified command on all nodes involved'
+task :cmd, :roles => [:ctrl,:cmpt] do
+  set :user, 'root'
+  run ENV['CMD']
+end
+
+
+desc 'Install puppet on hosts'
+task :puppet, :roles=>[:ctrl,:cmpt] do
+  set :user, 'root'
+  run "export DEBIAN_FRONTEND=noninteractive;apt-get update"
+  run "apt-get install -y puppet"
 end
