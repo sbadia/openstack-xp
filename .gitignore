@@ -1,2 +1,4 @@
 .xp_cache
 *.swp
+.tmp/
+modules/
